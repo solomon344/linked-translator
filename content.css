@@ -1,0 +1,222 @@
+/* ── TRANSLATE BUTTON ──────────────────────────────────── */
+.lt-btn-wrap {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.lt-translate-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #0a0a0a;
+  color: #f5f0e8;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.lt-translate-btn:hover {
+  background: #c8001a;
+  transform: translateY(-1px);
+}
+
+.lt-translate-btn:active {
+  transform: translateY(0);
+}
+
+.lt-translate-btn:disabled {
+  opacity: 0.7;
+  cursor: default;
+  transform: none;
+}
+
+.lt-translate-btn.lt-done {
+  background: #1a7a3c;
+}
+
+.lt-translate-btn.lt-error {
+  background: #c8001a;
+}
+
+.lt-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.lt-spin {
+  display: inline-block;
+  animation: lt-spin 1s linear infinite;
+}
+
+@keyframes lt-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── TRANSLATION RESULT CARD ────────────────────────────── */
+.lt-result {
+  margin: 12px 0 4px;
+  border: 2px solid #0a0a0a;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  animation: lt-slide-in 0.25s ease;
+}
+
+@keyframes lt-slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lt-result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0a0a0a;
+  color: #f5f0e8;
+  padding: 7px 12px;
+}
+
+.lt-result-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.lt-result-text {
+  background: #f5f0e8;
+  color: #0a0a0a;
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.lt-result-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f0ebe0;
+  padding: 6px 12px;
+  border-top: 1px solid #ddd6c8;
+}
+
+.lt-result-footer span {
+  font-size: 10px;
+  color: #888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.lt-share-btn {
+  font-size: 11px;
+  font-weight: 500;
+  color: #c8001a;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+
+.lt-share-btn:hover { text-decoration: underline; }
+
+/* ── CLOSE BUTTON ────────────────────────────────────────── */
+.lt-close {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0 0 0 8px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.lt-close:hover { color: #fff; }
+
+/* ── PAYWALL BANNER ──────────────────────────────────────── */
+.lt-paywall-banner {
+  position: relative;
+  margin: 12px 0 4px;
+  background: #0a0a0a;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  animation: lt-slide-in 0.25s ease;
+}
+
+.lt-paywall-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lt-paywall-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.lt-paywall-copy {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lt-paywall-copy strong {
+  color: #f5f0e8;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.lt-paywall-copy span {
+  color: #888;
+  font-size: 12px;
+}
+
+.lt-paywall-btn {
+  flex-shrink: 0;
+  background: #c8001a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.lt-paywall-btn:hover { opacity: 0.88; }
+
+.lt-paywall-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  color: #555;
+}
+
+.lt-paywall-close:hover { color: #f5f0e8; }
+
+.lt-shake {
+  animation: lt-shake 0.4s ease;
+}
+
+@keyframes lt-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}

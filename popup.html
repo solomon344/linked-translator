@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinkedIn Translator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0a0a0a;
+      --paper: #f5f0e8;
+      --red: #c8001a;
+      --muted: #6b6459;
+      --border: #2a2a2a;
+      --accent-bg: #0a0a0a;
+      --accent-text: #f5f0e8;
+    }
+
+    body {
+      width: 340px;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow: hidden;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 16px 18px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--red);
+    }
+
+    .masthead {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 34px;
+      letter-spacing: 1px;
+      line-height: 1;
+      color: #fff;
+    }
+
+    .masthead span {
+      color: var(--red);
+    }
+
+    .tagline {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #999;
+      margin-top: 4px;
+    }
+
+    .edition {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 9px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #666;
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    /* ── DIVIDER ── */
+    .rule {
+      height: 1px;
+      background: var(--border);
+      margin: 0;
+    }
+    .rule-double {
+      border-top: 3px double var(--border);
+    }
+
+    /* ── BODY ── */
+    .body {
+      padding: 16px 18px;
+    }
+
+    /* ── STATUS STATES ── */
+    .state { display: none; }
+    .state.active { display: block; }
+
+    /* Free state */
+    .uses-counter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .uses-label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .uses-pips {
+      display: flex;
+      gap: 5px;
+    }
+
+    .pip {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: var(--ink);
+      transition: background 0.2s;
+    }
+
+    .pip.used {
+      background: var(--paper);
+    }
+
+    .how-to {
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+
+    .how-to-title {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    .how-to ol {
+      padding-left: 16px;
+      font-size: 12px;
+      color: #ccc;
+      line-height: 1.8;
+    }
+
+    .how-to ol li { margin: 0; }
+
+    .free-note {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      padding-top: 4px;
+    }
+
+    .free-note strong {
+      color: var(--red);
+      font-weight: 500;
+    }
+
+    /* Paywall state */
+    .paywall-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .paywall-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .price-tag {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 3px;
+      margin-bottom: 14px;
+    }
+
+    .price-currency {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--red);
+    }
+
+    .price-amount {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .price-period {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .btn-pay {
+      display: block;
+      width: 100%;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 13px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      margin-bottom: 10px;
+    }
+
+    .btn-pay:hover { opacity: 0.88; }
+
+    .license-section {
+      border-top: 1px solid #ddd;
+      padding-top: 12px;
+      margin-top: 4px;
+    }
+
+    .license-label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .license-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .license-input {
+      flex: 1;
+      border: 1.5px solid #ccc;
+      border-radius: 5px;
+      padding: 8px 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .license-input:focus { border-color: var(--ink); }
+    .license-input.error { border-color: var(--red); }
+    .license-input.success { border-color: #1a7a3c; }
+
+    .btn-activate {
+      background: var(--ink);
+      color: var(--paper);
+      border: none;
+      border-radius: 5px;
+      padding: 8px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+
+    .btn-activate:hover { opacity: 0.8; }
+
+    .license-msg {
+      font-size: 11px;
+      margin-top: 6px;
+      min-height: 16px;
+    }
+    .license-msg.error { color: var(--red); }
+    .license-msg.success { color: #1a7a3c; }
+
+    /* Pro state */
+    .pro-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 20px;
+      padding: 4px 12px 4px 8px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .pro-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #2ec27e;
+    }
+
+    .pro-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .pro-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .stat-card {
+      background: var(--ink);
+      color: var(--paper);
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      line-height: 1;
+      color: #fff;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: #888;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .btn-revoke {
+      font-size: 11px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      border-top: 1px solid #ddd;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #bbb;
+    }
+
+    .footer-link {
+      font-size: 10px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .footer-link:hover { color: var(--ink); }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="edition">
+      EST. 2025<br>
+      THE TRUTH DEPT.
+    </div>
+    <div class="masthead">LinkedIn<span>.</span><br>Translated</div>
+    <div class="tagline">Corporate speak → Human truth</div>
+  </div>
+
+  <div class="rule-double" style="border-top: 3px double #333; margin: 0;"></div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- STATE: FREE (default) -->
+    <div class="state active" id="state-free">
+      <div class="uses-counter">
+        <span class="uses-label">Free translations left</span>
+        <div class="uses-pips" id="pips">
+          <div class="pip" id="pip-1"></div>
+          <div class="pip" id="pip-2"></div>
+        </div>
+      </div>
+
+      <div class="how-to">
+        <div class="how-to-title">How it works</div>
+        <ol>
+          <li>Go to LinkedIn in this tab</li>
+          <li>Find any cringe post</li>
+          <li>Click the <strong style="color:#fff;">Translate</strong> button below it</li>
+          <li>Watch the truth emerge</li>
+        </ol>
+      </div>
+
+      <p class="free-note">You have <strong id="uses-remaining">2</strong> free translations.<br>Unlimited for <strong>$5 once.</strong></p>
+    </div>
+
+    <!-- STATE: PAYWALL -->
+    <div class="state" id="state-paywall">
+      <div class="paywall-headline">You've seen<br>enough truth for free.</div>
+      <p class="paywall-sub">Unlock unlimited translations. One payment, forever. No subscription nonsense.</p>
+
+      <div class="price-tag">
+        <span class="price-currency">$</span>
+        <span class="price-amount">5</span>
+        <span class="price-period">once, forever</span>
+      </div>
+
+      <button class="btn-pay" id="btn-pay">Get Unlimited Access →</button>
+
+      <div class="license-section">
+        <div class="license-label">Already paid? Enter your key</div>
+        <div class="license-row">
+          <input type="text" class="license-input" id="license-input" placeholder="XXXX-XXXX-XXXX-XXXX" />
+          <button class="btn-activate" id="btn-activate">Activate</button>
+        </div>
+        <div class="license-msg" id="license-msg"></div>
+      </div>
+    </div>
+
+    <!-- STATE: PRO (activated) -->
+    <div class="state" id="state-pro">
+      <div class="pro-badge">
+        <div class="pro-dot"></div>
+        Unlimited Access
+      </div>
+      <div class="pro-headline">You're in the<br>truth business now.</div>
+      <p class="pro-desc">Every LinkedIn post is fair game. The translate button appears on all posts automatically.</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num" id="stat-total">0</div>
+          <div class="stat-label">Translations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-today">0</div>
+          <div class="stat-label">Today</div>
+        </div>
+      </div>
+
+      <button class="btn-revoke" id="btn-revoke">Deactivate license</button>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="footer-brand">LinkedIn Translator v1.0</span>
+    <a class="footer-link" href="https://your-site.com/support" target="_blank">Support</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

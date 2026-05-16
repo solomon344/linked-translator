@@ -1,7 +1,7 @@
 // ── CONFIG ──────────────────────────────────────────────
 const DODO_PAYMENT_URL = 'https://checkout.dodopayments.com/buy/pdt_0NbeAioqYB9igUFkOHeOW?quantity=1'; // replace
 const API_BASE = 'https://linkedin-translator.vps.divparser.com'; // replace with your Hetzner VPS URL
-const MAX_FREE_USES = 5;
+const MAX_FREE_USES = 10;
 
 // ── HELPERS ─────────────────────────────────────────────
 function $(id) { return document.getElementById(id); }
@@ -12,10 +12,10 @@ function showState(name) {
 }
 
 function updatePips(usesLeft) {
-  const pip1 = $('pip-1');
-  const pip2 = $('pip-2');
-  if (usesLeft <= 1) pip1.classList.add('used');
-  if (usesLeft <= 0) pip2.classList.add('used');
+  const pips = Array.from(document.querySelectorAll('.pip'));
+  pips.forEach((pip, index) => {
+    pip.classList.toggle('used', index >= usesLeft);
+  });
   $('uses-remaining').textContent = Math.max(0, usesLeft);
 }
 

@@ -1,6 +1,6 @@
 // ── CONFIG ──────────────────────────────────────────────
 const API_BASE = 'https://linkedin-translator.vps.divparser.com'; // replace later
-const MAX_FREE_USES = 2;
+const MAX_FREE_USES = 10;
 
 // ── CACHED STATE ─────────────────────────────────────────
 let isProUser = false;
@@ -162,7 +162,7 @@ function showPaywallBanner(postEl) {
     <div class="lt-paywall-inner">
       <div class="lt-paywall-icon">📰</div>
       <div class="lt-paywall-copy">
-        <strong>You've used your 2 free translations.</strong>
+        <strong>You've used your ${MAX_FREE_USES} free translations.</strong>
         <span>Get unlimited for $5 — one time, forever.</span>
       </div>
       <button class="lt-paywall-btn">Unlock $5 →</button>

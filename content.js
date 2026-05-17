@@ -1,19 +1,36 @@
 // ── CONFIG ──────────────────────────────────────────────
 const API_BASE = 'https://linkedin-translator.vps.divparser.com'; // replace later
-const MAX_FREE_USES = 10;
+const MAX_FREE_USES = 5;
+const MAX_VERIFIED_FREE_USES = 10;
 
 // ── CACHED STATE ─────────────────────────────────────────
 let isProUser = false;
 let freeUsesCount = 0;
+let installId = '';
+let trialVerified = false;
 
 function loadState(cb) {
   try {
-    chrome.storage.local.get(['licenseKey', 'freeUses'], (data) => {
+    chrome.storage.local.get(['licenseKey', 'freeUses', 'installId', 'trialVerified'], (data) => {
       isProUser = !!data.licenseKey;
       freeUsesCount = data.freeUses || 0;
-      if (cb) cb();
+      trialVerified = !!data.trialVerified;
+      installId = data.installId || '';
+
+      if (!installId) {
+        installId = crypto.randomUUID?.() || `lt-${Date.now()}-${Math.random().toString(36).slice(2,10)}`;
+        chrome.storage.local.set({ installId }, () => {
+          if (cb) cb();
+        });
+      } else if (cb) {
+        cb();
+      }
     });
   } catch (e) {
+    if (!installId) {
+      installId = crypto.randomUUID?.() || `lt-${Date.now()}-${Math.random().toString(36).slice(2,10)}`;
+      try { chrome.storage.local.set({ installId }); } catch (err) {}
+    }
     if (cb) cb();
   }
 }
@@ -80,9 +97,6 @@ function injectButton(postEl) {
 async function handleTranslate(postEl, postText, btn) {
   await new Promise(res => loadState(res));
 
-  const canTranslate = isProUser || freeUsesCount < MAX_FREE_USES;
-  if (!canTranslate) { showPaywallBanner(postEl); return; }
-
   btn.innerHTML = '<span class="lt-icon lt-spin">⟳</span> Translating...';
   btn.disabled = true;
 
@@ -93,9 +107,18 @@ async function handleTranslate(postEl, postText, btn) {
     const res = await fetch(`${API_BASE}/translate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: postText })
+      body: JSON.stringify({ text: postText, installId })
     });
     const data = await res.json();
+
+    if (res.status === 403 && data.error === 'TRIAL_LIMIT_REACHED') {
+      showPaywallBanner(postEl, data.requiresVerification === true);
+      btn.innerHTML = '<span class="lt-icon">!</span> Trial limit reached';
+      btn.disabled = false;
+      btn.classList.add('lt-error');
+      return;
+    }
+
     if (!data.translation) throw new Error('empty');
 
     showTranslation(postEl, data.translation);
@@ -103,8 +126,9 @@ async function handleTranslate(postEl, postText, btn) {
     btn.classList.add('lt-done');
 
     if (!isProUser) {
-      const newCount = freeUsesCount + 1;
-      try { chrome.storage.local.set({ freeUses: newCount }); } catch(e) {}
+      const newCount = typeof data.freeUses === 'number' ? data.freeUses : freeUsesCount + 1;
+      trialVerified = !!data.verified;
+      try { chrome.storage.local.set({ freeUses: newCount, trialVerified }); } catch (e) {}
       freeUsesCount = newCount;
     } else {
       try {
@@ -117,10 +141,10 @@ async function handleTranslate(postEl, postText, btn) {
             lastDate: today
           });
         });
-      } catch(e) {}
+      } catch (e) {}
     }
   } catch (err) {
-    console.error('[LT] Translation failed:', err.message);
+    console.error('[LT] Translation failed:', err.message || err);
     btn.innerHTML = '<span class="lt-icon">!</span> Backend not set up yet';
     btn.disabled = false;
     btn.classList.add('lt-error');
@@ -152,7 +176,7 @@ function showTranslation(postEl, translation) {
 }
 
 // ── PAYWALL BANNER ────────────────────────────────────────
-function showPaywallBanner(postEl) {
+function showPaywallBanner(postEl, requiresVerification = false) {
   const existing = postEl.querySelector('.lt-paywall-banner');
   if (existing) { existing.classList.add('lt-shake'); setTimeout(() => existing.classList.remove('lt-shake'), 400); return; }
 
@@ -163,14 +187,21 @@ function showPaywallBanner(postEl) {
       <div class="lt-paywall-icon">📰</div>
       <div class="lt-paywall-copy">
         <strong>You've used your ${MAX_FREE_USES} free translations.</strong>
-        <span>Get unlimited for $5 — one time, forever.</span>
+        <span>${requiresVerification ? 'Verify your email to keep using the free trial.' : 'Get unlimited for $5 — one time, forever.'}</span>
       </div>
-      <button class="lt-paywall-btn">Unlock $5 →</button>
+      <button class="lt-paywall-btn">${requiresVerification ? 'Verify email' : 'Unlock $5 →'}</button>
     </div>
     <button class="lt-close lt-paywall-close">✕</button>
   `;
+
   banner.querySelector('.lt-paywall-btn').addEventListener('click', () => {
-    try { chrome.runtime.sendMessage({ action: 'openPayment' }); } catch(e) {}
+    try {
+      if (requiresVerification) {
+        chrome.runtime.sendMessage({ action: 'openVerify' });
+      } else {
+        chrome.runtime.sendMessage({ action: 'openPayment' });
+      }
+    } catch (e) {}
   });
   banner.querySelector('.lt-paywall-close').addEventListener('click', () => banner.remove());
   postEl.appendChild(banner);

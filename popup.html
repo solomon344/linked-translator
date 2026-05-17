@@ -430,7 +430,7 @@
         </ol>
       </div>
 
-      <p class="free-note">You have <strong id="uses-remaining">10</strong> free translations.<br>Unlimited for <strong>$5 once.</strong></p>
+      <p class="free-note">You have <strong id="uses-remaining">5</strong> free translations.<br>Unlimited for <strong>$5 once.</strong></p>
     </div>
 
     <!-- STATE: PAYWALL -->
@@ -454,6 +454,26 @@
         </div>
         <div class="license-msg" id="license-msg"></div>
       </div>
+    </div>
+
+    <!-- STATE: VERIFY -->
+    <div class="state" id="state-verify">
+      <div class="paywall-headline">Verify the free trial</div>
+      <p class="paywall-sub">Enter your email to receive a code. That lets you keep using translations up to 10 free uses.</p>
+
+      <div class="license-section">
+        <div class="license-label">Email address</div>
+        <input type="email" class="license-input" id="verify-email" placeholder="you@example.com" />
+      </div>
+      <button class="btn-activate" id="btn-send-code">Send code</button>
+      <div class="license-msg" id="verify-email-msg"></div>
+
+      <div class="license-section" style="margin-top: 12px;">
+        <div class="license-label">Verification code</div>
+        <input type="text" class="license-input" id="verify-code" placeholder="123456" />
+      </div>
+      <button class="btn-activate" id="btn-submit-code">Verify code</button>
+      <div class="license-msg" id="verify-code-msg"></div>
     </div>
 
     <!-- STATE: PRO (activated) -->
